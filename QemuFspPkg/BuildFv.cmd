@@ -95,6 +95,7 @@ set %~1=1
 @REM @todo update BPDG.exe tool to use FSP_C_UPD_GUID
 set TOOL_MACRO=%BD_MACRO% -DFSP_VER=%FSP_VER%
 set FSP_T_UPD_GUID=34686CA3-34F9-4901-B82A-BA630F0714C6
+set FSP_V_UPD_GUID=4E2F4725-734A-4399-BAF5-B4E16348EB2F
 set FSP_M_UPD_GUID=39A250DB-E465-4DD1-A2AC-E2BD3C0E2385
 set FSP_S_UPD_GUID=CAE3605B-5B34-4C85-B3D7-27D54273C40F
 python %WORKSPACE%/IntelFsp2Pkg/Tools/GenCfgOpt.py UPDTXT ^
@@ -149,6 +150,10 @@ if "%ERRORLEVEL%"=="256" (
       attrib -r %FSP_PKG_NAME%\Include\FsptUpd.h
       copy /y Build\%FSP_PKG_NAME%\%BD_TARGET%_%TOOL_CHAIN_TAG%\FV\FsptUpd.h %FSP_PKG_NAME%\Include\FsptUpd.h
       )
+    if exist "Build\%FSP_PKG_NAME%\%BD_TARGET%_%TOOL_CHAIN_TAG%\FV\FspvUpd.h" (
+      attrib -r %FSP_PKG_NAME%\Include\FspvUpd.h
+      copy /y Build\%FSP_PKG_NAME%\%BD_TARGET%_%TOOL_CHAIN_TAG%\FV\FspvUpd.h %FSP_PKG_NAME%\Include\FspvUpd.h
+      )
     if exist "Build\%FSP_PKG_NAME%\%BD_TARGET%_%TOOL_CHAIN_TAG%\FV\FspmUpd.h" (
       attrib -r %FSP_PKG_NAME%\Include\FspmUpd.h
       copy /y Build\%FSP_PKG_NAME%\%BD_TARGET%_%TOOL_CHAIN_TAG%\FV\FspmUpd.h %FSP_PKG_NAME%\Include\FspmUpd.h
@@ -193,6 +198,24 @@ python %WORKSPACE%\IntelFsp2Pkg\Tools\PatchFv.py ^
      "<[0x0000]>+0x00C4, FspSecCoreT:_TempRamInitApi - [0x0000],                                                             @TempRamInit API" ^
      "0x0000,            0x00000000,                                                                                         @Restore the value" ^
      "FspSecCoreT:_FspInfoHeaderRelativeOff, FspSecCoreT:_AsmGetFspInfoHeader - {912740BE-2284-4734-B971-84B027353F0C:0x1C}, @FSP-T Header Offset"
+if ERRORLEVEL 1 goto:PreBuildFail
+
+echo Patch FSP-V Image ...
+python %WORKSPACE%\IntelFsp2Pkg\Tools\PatchFv.py ^
+     Build\%FSP_PKG_NAME%\%BD_TARGET%_%TOOL_CHAIN_TAG%\FV ^
+     FSP-V:%FSP_BASENAME%  ^
+     "0x0000,            _BASE_FSP-V_,                                                                                       @Temporary Base" ^
+     "<[0x0000]>+0x00AC, [<[0x0000]>+0x0020],                                                                                @FSP-V Size" ^
+     "<[0x0000]>+0x00B0, [0x0000],                                                                                           @FSP-V Base" ^
+     "<[0x0000]>+0x00B4, ([<[0x0000]>+0x00B4] & 0xFFFFFFFF) | 0x0001,                                                        @FSP-V Image Attribute" ^
+     "<[0x0000]>+0x00B6, ([<[0x0000]>+0x00B6] & 0xFFFF0FFC) | 0x2000 | %FSP_BUILD_TYPE% | %FSP_RELEASE_TYPE%,                @FSP-V Component Attribute" ^
+     "<[0x0000]>+0x00B8, 0197EF5E-2FFC-4089-8E55-F70400B18146:0x1C - <[0x0000]>,                                             @FSP-V CFG Offset" ^
+     "<[0x0000]>+0x00BC, [0197EF5E-2FFC-4089-8E55-F70400B18146:0x14] & 0xFFFFFF - 0x001C,                                    @FSP-V CFG Size" ^
+     "<[0x0000]>+0x00D0, FspSecCoreV:_FspMemoryInitApi - [0x0000],                                                           @MemoryInitApi API" ^
+     "<[0x0000]>+0x00D4, FspSecCoreV:_TempRamExitApi - [0x0000],                                                             @TempRamExit API" ^
+     "FspSecCoreV:_FspPeiCoreEntryOff, PeiCore:__ModuleEntryPoint - [0x0000],                                                @PeiCore Entry" ^
+     "0x0000,            0x00000000,                                                                                         @Restore the value" ^
+     "FspSecCoreV:_FspInfoHeaderRelativeOff, FspSecCoreV:_AsmGetFspInfoHeader - {912740BE-2284-4734-B971-84B027353F0C:0x1C}, @FSP-V Header Offset"
 if ERRORLEVEL 1 goto:PreBuildFail
 
 echo Patch FSP-M Image ...

@@ -312,6 +312,7 @@ def pre_build(target, toolchain, fsppkg):
 
     FspGuid = {
         'FspTUpdGuid'       : '34686CA3-34F9-4901-B82A-BA630F0714C6',
+        'FspVUpdGuid'       : '4E2F4725-734A-4399-BAF5-B4E16348EB2F',
         'FspMUpdGuid'       : '39A250DB-E465-4DD1-A2AC-E2BD3C0E2385',
         'FspSUpdGuid'       : 'CAE3605B-5B34-4C85-B3D7-27D54273C40F'
     }
@@ -358,7 +359,7 @@ def pre_build(target, toolchain, fsppkg):
     if ret:
         fatal('Failed to generate UPD BSF file !')
 
-    for fliename in ['FspUpd.h', 'FsptUpd.h', 'FspmUpd.h', 'FspsUpd.h']:
+    for fliename in ['FspUpd.h', 'FsptUpd.h','FspvUpd.h', 'FspmUpd.h', 'FspsUpd.h']:
         shutil.copyfile('%s/%s' % (fvdir, fliename), '%s/Include/%s'%(pkgname, fliename))
     print('End of PreBuild...')
 
@@ -385,6 +386,19 @@ def post_build (target, toolchain, fsppkg, fsparch):
            ]
 
     cmd2 = [
+           "0x0000,            _BASE_FSP-V_,                                                                                       @Temporary Base",
+           "<[0x0000]>+0x00AC, [<[0x0000]>+0x0020],                                                                                @FSP-V Size",
+           "<[0x0000]>+0x00B0, [0x0000],                                                                                           @FSP-V Base",
+           "<[0x0000]>+0x00B4, ([<[0x0000]>+0x00B4] & 0xFFFFFFFF) | 0x0001,                                                        @FSP-V Image Attribute",
+           "<[0x0000]>+0x00B6, ([<[0x0000]>+0x00B6] & 0xFFFF0FF8) | 0x1000 | 0x000%d | 0x0002,                                     @FSP-V Component Attribute" % build_type,
+           "<[0x0000]>+0x00B8, 0197EF5E-2FFC-4089-8E55-F70400B18146:0x1C - <[0x0000]>,                                             @FSP-V CFG Offset",
+           "<[0x0000]>+0x00BC, [0197EF5E-2FFC-4089-8E55-F70400B18146:0x14] & 0xFFFFFF - 0x001C,                                    @FSP-V CFG Size",
+           "FspSecCoreV:_FspPeiCoreEntryOff, PeiCore:__ModuleEntryPoint - [0x0000],                                                @PeiCore Entry",
+           "0x0000,            0x00000000,                                                                                         @Restore the value",
+           "FspSecCoreV:_FspInfoHeaderRelativeOff, FspSecCoreV:_AsmGetFspInfoHeader - {912740BE-2284-4734-B971-84B027353F0C:0x1C}, @FSP-V Header Offset"
+           ]
+
+    cmd3 = [
          "0x0000,            _BASE_FSP-M_,                                                                                       @Temporary Base",
          "<[0x0000]>+0x00AC, [<[0x0000]>+0x0020],                                                                                @FSP-M Size",
          "<[0x0000]>+0x00B0, [0x0000],                                                                                           @FSP-M Base",
@@ -399,7 +413,7 @@ def post_build (target, toolchain, fsppkg, fsparch):
          "FspSecCoreM:_FspInfoHeaderRelativeOff, FspSecCoreM:_AsmGetFspInfoHeader - {912740BE-2284-4734-B971-84B027353F0C:0x1C}, @FSP-M Header Offset"
          ]
 
-    cmd3 = [
+    cmd4 = [
          "0x0000,            _BASE_FSP-S_,                                                                                       @Temporary Base",
          "<[0x0000]>+0x00AC, [<[0x0000]>+0x0020],                                                                                @FSP-S Size",
          "<[0x0000]>+0x00B0, [0x0000],                                                                                           @FSP-S Base",
@@ -413,7 +427,8 @@ def post_build (target, toolchain, fsppkg, fsparch):
          "FspSecCoreS:_FspInfoHeaderRelativeOff, FspSecCoreS:_AsmGetFspInfoHeader - {912740BE-2284-4734-B971-84B027353F0C:0x1C}, @FSP-S Header Offset"
          ]
 
-    for fspt, cmd in [('T', cmd1), ('M', cmd2), ('S',cmd3)]:
+   # for fspt, cmd in [('T', cmd1), ('V', cmd2), ('M', cmd3), ('S',cmd4)]:
+    for fspt, cmd in [('T', cmd1), ('M', cmd3), ('S',cmd4)]:
         print ('Patch FSP-%s Image ...' % fspt)
         line = ['python', patchfv, fvdir, 'FSP-%s:QEMUFSP' % fspt]
         line.extend(cmd)
@@ -426,6 +441,7 @@ def post_build (target, toolchain, fsppkg, fsparch):
         ('QemuFsp.bsf', 'QEMU_FSP.bsf'),
         ('FspUpd.h',    'FspUpd.h'),
         ('FsptUpd.h',   'FsptUpd.h'),
+        ('FspvUpd.h',   'FspvUpd.h'),
         ('FspmUpd.h',   'FspmUpd.h'),
         ('FspsUpd.h',   'FspsUpd.h'),
     ]

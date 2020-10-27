@@ -33,9 +33,11 @@
   # UPD tool definition
   #
   FSP_T_UPD_TOOL_GUID            = 34686CA3-34F9-4901-B82A-BA630F0714C6
+  FSP_V_UPD_TOOL_GUID            = 4E2F4725-734A-4399-BAF5-B4E16348EB2F
   FSP_M_UPD_TOOL_GUID            = 39A250DB-E465-4DD1-A2AC-E2BD3C0E2385
   FSP_S_UPD_TOOL_GUID            = CAE3605B-5B34-4C85-B3D7-27D54273C40F
   FSP_T_UPD_FFS_GUID             = 70BCF6A5-FFB1-47D8-B1AE-EFE5508E23EA
+  FSP_V_UPD_FFS_GUID             = 0197EF5E-2FFC-4089-8E55-F70400B18146
   FSP_M_UPD_FFS_GUID             = D5B86AEA-6AF7-40D4-8014-982301BC3D89
   FSP_S_UPD_FFS_GUID             = E3CD9B18-998C-4F76-B65E-98B154E5446F
 
@@ -179,8 +181,8 @@
   #
 
   # Global definitions in BSF
-  # !BSF PAGES:{MEM:"FSP MemoryInit Settings", SIL:"FSP SiliconInit Settings"}
-  # !BSF BLOCK:{NAME:"Apollo Lake Platform", VER:"0.1"}
+  # !BSF PAGES:{VAL:"FSP Validation Settings", MEM:"FSP MemoryInit Settings", SIL:"FSP SiliconInit Settings"}
+  # !BSF BLOCK:{NAME:"QEMU Platform", VER:"0.1"}
 
   # !BSF FIND:{QEMUPD_T}
   # !HDR COMMENT:{FSP_UPD_HEADR:FSP UPD Header}
@@ -222,6 +224,37 @@
   # The tool will use this field to determine the actual end of the UPD data
   # structure.
   gQemuFspPkgTokenSpaceGuid.UpdTerminator               | 0x0090 | 0x02 | 0x55AA
+
+  ################################################################################
+  #
+  # UPDs consumed in FspFwValInit Api
+  #
+  ################################################################################
+  # !BSF FIND:{QEMUPD_V}
+  # !HDR COMMENT:{FSP_UPD_HEADER:FSP UPD Header}
+  # !HDR EMBED:{FSP_UPD_HEADER:FspUpdHeader:START}
+  # FspvUpdSignature: {QEMUPD_V}
+  gQemuFspPkgTokenSpaceGuid.Signature                   | 0x0000 | 0x08 | 0x565F4450554D4551
+  # !BSF NAME:{FspvUpdRevision}
+  gQemuFspPkgTokenSpaceGuid.Revision                    | 0x0008 | 0x01 | 0x01
+  # !HDR EMBED:{FSP_UPD_HEADER:FspUpdHeader:END}
+  gQemuFspPkgTokenSpaceGuid.Reserved                    | 0x0009 | 0x17 | {0x00}
+
+  # !HDR COMMENT:{FSP_V_CONFIG:Fsp V Architectural UPD}
+  # !HDR EMBED:{FSP_V_CONFIG:FspvConfig:START}
+
+  # Base address of the validation configuration region.
+  gQemuFspPkgTokenSpaceGuid.ValConfigBase               | 0x0020 | 0x04 | 0x00000000
+  # Length of validation configuration.
+  gQemuFspPkgTokenSpaceGuid.ValConfigSize               | 0x0024 | 0x04 | 0x00000000
+
+  # !HDR EMBED:{FSP_V_CONFIG:FspvConfig:END}
+  gQemuFspPkgTokenSpaceGuid.ReservedFspvUpd             | 0x0028 | 0x08 | {0x00}
+
+  # Note please keep "UpdTerminator" at the end of each UPD region.
+  # The tool will use this field to determine the actual end of the UPD data
+  # structure.
+  gQemuFspPkgTokenSpaceGuid.UpdTerminator               | 0x0030 | 0x02 | 0x55AA
 
   ################################################################################
   #
@@ -407,6 +440,7 @@
       PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
   }
 
+  $(FSP_PACKAGE)/FspvInit/FspvInit.inf
   $(FSP_PACKAGE)/FspmInit/FspmInit.inf
   $(FSP_PACKAGE)/FspsInit/FspsInit.inf
   $(FSP_PACKAGE)/QemuVideo/QemuVideo.inf

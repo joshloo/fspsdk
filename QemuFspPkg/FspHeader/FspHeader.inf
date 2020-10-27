@@ -41,6 +41,7 @@
   gQemuFspPkgTokenSpaceGuid.PcdFspImageAttributes
   gQemuFspPkgTokenSpaceGuid.PcdFspComponentAttributes
   gQemuFspPkgTokenSpaceGuid.PcdFlashFvFsptBase
+  gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvBase
   gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspmBase
   gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspsBase
   gQemuFspPkgTokenSpaceGuid.PcdFspImageRevision

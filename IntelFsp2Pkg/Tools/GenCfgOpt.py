@@ -544,6 +544,7 @@ EndList
             if IsDefSect:
                 #DEFINE UPD_TOOL_GUID       = 8C3D856A-9BE6-468E-850A-24F7A8D38E09
                 #DEFINE FSP_T_UPD_TOOL_GUID = 34686CA3-34F9-4901-B82A-BA630F0714C6
+                #DEFINE FSP_V_UPD_TOOL_GUID = 4E2F4725-734A-4399-BAF5-B4E16348EB2F
                 #DEFINE FSP_M_UPD_TOOL_GUID = 39A250DB-E465-4DD1-A2AC-E2BD3C0E2385
                 #DEFINE FSP_S_UPD_TOOL_GUID = CAE3605B-5B34-4C85-B3D7-27D54273C40F
                 Match = re.match("^\s*(?:DEFINE\s+)*(\w+)\s*=\s*([/$()-.\w]+)", DscLine)
@@ -811,8 +812,8 @@ EndList
         return Error
 
     def CreateSplitUpdTxt (self, UpdTxtFile):
-        GuidList = ['FSP_T_UPD_TOOL_GUID','FSP_M_UPD_TOOL_GUID','FSP_S_UPD_TOOL_GUID']
-        SignatureList = ['0x545F', '0x4D5F','0x535F']        #  _T, _M, and _S signature for FSPT, FSPM, FSPS
+        GuidList = ['FSP_T_UPD_TOOL_GUID', 'FSP_V_UPD_TOOL_GUID', 'FSP_M_UPD_TOOL_GUID','FSP_S_UPD_TOOL_GUID']
+        SignatureList = ['0x545F', '0x565F', '0x4D5F','0x535F']        #  _T, _M, _V and _S signature for FSPT, FSPV, FSPM, FSPS
         for Index in range(len(GuidList)):
             UpdTxtFile = ''
             FvDir = self._FvDir
@@ -822,7 +823,6 @@ EndList
 
             if UpdTxtFile == '':
                 UpdTxtFile = os.path.join(FvDir, self._MacroDict[GuidList[Index]] + '.txt')
-
             ReCreate = False
             if not os.path.exists(UpdTxtFile):
                 ReCreate = True
@@ -1067,9 +1067,11 @@ EndList
                    Chars.append(chr(Value & 0xFF))
                    Value = Value >> 8
                SignatureStr = ''.join(Chars)
-               # Signature will be _T / _M / _S for FSPT / FSPM / FSPS accordingly
+               # Signature will be _T / _V / _M / _S for FSPT / FSPV / FSPM / FSPS accordingly
                if '_T' in SignatureStr[6:6+2]:
                    TxtBody.append("#define FSPT_UPD_SIGNATURE               %s        /* '%s' */\n\n" % (Item['value'], SignatureStr))
+               elif '_V' in SignatureStr[6:6+2]:
+                   TxtBody.append("#define FSPV_UPD_SIGNATURE               %s        /* '%s' */\n\n" % (Item['value'], SignatureStr))
                elif '_M' in SignatureStr[6:6+2]:
                    TxtBody.append("#define FSPM_UPD_SIGNATURE               %s        /* '%s' */\n\n" % (Item['value'], SignatureStr))
                elif '_S' in SignatureStr[6:6+2]:
@@ -1078,8 +1080,8 @@ EndList
 
         for Region in ['UPD']:
             UpdOffsetTable = []
-            UpdSignature = ['0x545F', '0x4D5F', '0x535F']   #['_T', '_M', '_S'] signature for FSPT, FSPM, FSPS
-            UpdStructure = ['FSPT_UPD', 'FSPM_UPD', 'FSPS_UPD']
+            UpdSignature = ['0x545F', '0x565F', '0x4D5F', '0x535F']   #['_T', '_V', '_M', '_S'] signature for FSPT, FSPM, FSPS
+            UpdStructure = ['FSPT_UPD','FSPV_UPD', 'FSPM_UPD', 'FSPS_UPD']
             for Item in self._CfgItemList:
                 if Item["cname"] == 'Signature' and Item["value"][0:6] in UpdSignature:
                     UpdOffsetTable.append (Item["offset"])
@@ -1169,13 +1171,14 @@ EndList
         TxtBody = self.PostProcessBody (TxtBody)
 
         HeaderTFileName = 'FsptUpd.h'
+        HeaderVFileName = 'FspvUpd.h'
         HeaderMFileName = 'FspmUpd.h'
         HeaderSFileName = 'FspsUpd.h'
 
-        UpdRegionCheck = ['FSPT', 'FSPM', 'FSPS']     # FSPX_UPD_REGION
-        UpdConfigCheck = ['FSP_T', 'FSP_M', 'FSP_S']  # FSP_X_CONFIG, FSP_X_TEST_CONFIG, FSP_X_RESTRICTED_CONFIG
-        UpdSignatureCheck = ['FSPT_UPD_SIGNATURE', 'FSPM_UPD_SIGNATURE', 'FSPS_UPD_SIGNATURE']
-        ExcludedSpecificUpd = ['FSPT_ARCH_UPD', 'FSPM_ARCH_UPD', 'FSPS_ARCH_UPD']
+        UpdRegionCheck = ['FSPT','FSPV', 'FSPM', 'FSPS']     # FSPX_UPD_REGION
+        UpdConfigCheck = ['FSP_T', 'FSP_V', 'FSP_M', 'FSP_S']  # FSP_X_CONFIG, FSP_X_TEST_CONFIG, FSP_X_RESTRICTED_CONFIG
+        UpdSignatureCheck = ['FSPT_UPD_SIGNATURE','FSPV_UPD_SIGNATURE', 'FSPM_UPD_SIGNATURE', 'FSPS_UPD_SIGNATURE']
+        ExcludedSpecificUpd = ['FSPT_ARCH_UPD', 'FSPV_ARCH_UPD', 'FSPM_ARCH_UPD', 'FSPS_ARCH_UPD']
 
         IncLines = []
         if InputHeaderFile != '':
@@ -1191,6 +1194,9 @@ EndList
             if UpdRegionCheck[item] == 'FSPT':
                 HeaderFd = open(os.path.join(FvDir, HeaderTFileName), "w")
                 FileBase = os.path.basename(os.path.join(FvDir, HeaderTFileName))
+            elif UpdRegionCheck[item] == 'FSPV':
+                HeaderFd = open(os.path.join(FvDir, HeaderVFileName), "w")
+                FileBase = os.path.basename(os.path.join(FvDir, HeaderVFileName))
             elif UpdRegionCheck[item] == 'FSPM':
                 HeaderFd = open(os.path.join(FvDir, HeaderMFileName), "w")
                 FileBase = os.path.basename(os.path.join(FvDir, HeaderMFileName))

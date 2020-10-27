@@ -58,6 +58,7 @@
   # PPI to tear down the temporary memory set up by TempRamInit ().
   #
   gFspTempRamExitPpiGuid                = { 0xbc1cfbdb, 0x7e50, 0x42be, {0xb4, 0x87, 0x22, 0xe0, 0xa9, 0x0c, 0xb0, 0x52}}
+  gFspvFwValPpiGuid                     = {0xc3bb61a9, 0x5fc1, 0x4713, {0x9b, 0x75, 0x6b, 0xbb, 0xd2, 0x3c, 0x55, 0x10}}
 
 [Guids]
   #
@@ -98,6 +99,11 @@
   # Maximal Interrupt supported in IDT table.
   #
   gIntelFsp2PkgTokenSpaceGuid.PcdFspMaxInterruptSupported |        34| UINT8|0x10000005
+  #
+  # Firmware Validation block
+  #
+  gIntelFsp2PkgTokenSpaceGuid.PcdFlashFwValBase          |0x00000000|UINT32|0x10001005
+  gIntelFsp2PkgTokenSpaceGuid.PcdFlashFwValSize          |0x00000000|UINT32|0x10001006
 
 [PcdsFixedAtBuild,PcdsDynamic,PcdsDynamicEx]
   gIntelFsp2PkgTokenSpaceGuid.PcdFspReservedMemoryLength |0x00100000|UINT32|0x46530000
