@@ -336,6 +336,46 @@ GetFspMemoryInitUpdDataPointer (
   return FspData->MemoryInitUpdPtr;
 }
 
+/**
+  This function sets the FspValInit UPD data pointer.
+
+  @param[in] ValidationInitUpdPtr   FspValInit UPD data pointer.
+**/
+VOID
+EFIAPI
+SetFspValidationInitUpdDataPointer (
+  IN VOID    *ValidationInitUpdPtr
+  )
+{
+  FSP_GLOBAL_DATA  *FspData;
+
+  //
+  // Get the FSP Global Data Pointer
+  //
+  FspData  = GetFspGlobalDataPointer ();
+
+  //
+  // Set the FspValInit UPD data pointer.
+  //
+  FspData->ValidationInitUpdPtr = ValidationInitUpdPtr;
+}
+
+/**
+  This function gets the FspValInit UPD data pointer.
+
+  @return FspValInit UPD data pointer.
+**/
+VOID *
+EFIAPI
+GetFspValidationInitUpdDataPointer (
+  VOID
+  )
+{
+  FSP_GLOBAL_DATA  *FspData;
+
+  FspData  = GetFspGlobalDataPointer ();
+  return FspData->ValidationInitUpdPtr;
+}
 
 /**
   This function sets the FspSiliconInit UPD data pointer.

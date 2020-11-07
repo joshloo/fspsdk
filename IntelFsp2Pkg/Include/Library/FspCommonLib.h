@@ -171,6 +171,28 @@ GetFspMemoryInitUpdDataPointer (
   );
 
 /**
+  This function sets the validation init UPD data pointer.
+
+  @param[in] ValidationInitUpdPtr   validation init UPD data pointer.
+**/
+VOID
+EFIAPI
+SetFspValidationInitUpdDataPointer (
+  IN VOID    *ValidationInitUpdPtr
+  );
+
+/**
+  This function gets the Validation init UPD data pointer.
+
+  @return Validation init UPD data pointer.
+**/
+VOID *
+EFIAPI
+GetFspValidationInitUpdDataPointer (
+  VOID
+  );
+
+/**
   This function sets the silicon init UPD data pointer.
 
   @param[in] SiliconInitUpdPtr   silicon init UPD data pointer.

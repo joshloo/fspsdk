@@ -408,8 +408,8 @@ def post_build (target, toolchain, fsppkg, fsparch):
            "<[0x0000]>+0x00B6, ([<[0x0000]>+0x00B6] & 0xFFFF0FF8) | 0x2000 | 0x000%d | 0x000%d | 0x0002,                           @FSP-V Component Attribute"  % (build_type, fsp_arch),
            "<[0x0000]>+0x00B8, 0197EF5E-2FFC-4089-8E55-F70400B18146:0x1C - <[0x0000]>,                                             @FSP-V CFG Offset",
            "<[0x0000]>+0x00BC, [0197EF5E-2FFC-4089-8E55-F70400B18146:0x14] & 0xFFFFFF - 0x001C,                                    @FSP-V CFG Size",
-           # "<[0x0000]>+0x00C4, FspSecCoreV:_FspvInit - [0x0000],                                                                   @FSP-V Entry",
-      #     "<[0x0000]>+0x00CC, FspSecCoreV:_NotifyPhaseApi - [0x0000],                                                             @NotifyPhase API",
+           "<[0x0000]>+0x00C4, FspSecCoreV:_FspValInitApi - [0x0000],                                                              @ValInit Entry",
+           "<[0x0000]>+0x00CC, FspSecCoreV:_NotifyPhaseApi - [0x0000],                                                             @NotifyPhase API",
            "0x0000,            0x00000000,                                                                                         @Restore the value",
            "FspSecCoreV:_FspInfoHeaderRelativeOff, FspSecCoreV:_AsmGetFspInfoHeader - {912740BE-2284-4734-B971-84B027353F0C:0x1C}, @FSP-V Header Offset"
            ]

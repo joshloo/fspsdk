@@ -46,6 +46,8 @@
   #
   PeimEntryPoint
   PeiServicesLib
+  FspPlatformLib
+  FspCommonLib
   DebugLib
   PcdLib
 

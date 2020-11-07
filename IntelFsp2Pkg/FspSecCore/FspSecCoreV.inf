@@ -9,7 +9,7 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = FspSecCoreV  #FROM M
+  BASE_NAME                      = FspSecCoreV
   FILE_GUID                      = 50751379-4A2A-46AC-8FC9-E04193468723
   MODULE_TYPE                    = SEC
   VERSION_STRING                 = 1.0
@@ -21,23 +21,18 @@
 #
 
 [Sources]
-  SecMain.c
-  SecMain.h
-  SecFsp.c
-  SecFsp.h
   SecFspApiChk.c
+  SecFsp.h
 
 [Sources.X64]
-  X64/FspApiEntryM.nasm
+  X64/FspApiEntryV.nasm
   X64/FspApiEntryCommon.nasm
   X64/FspHelper.nasm
-  X64/ReadEsp.nasm
 
 [Sources.IA32]
-  Ia32/FspApiEntryM.nasm
+  Ia32/FspApiEntryV.nasm
   Ia32/FspApiEntryCommon.nasm
   Ia32/FspHelper.nasm
-  Ia32/ReadEsp.nasm
 
 [Binaries.Ia32]
   RAW|Vtf0/Bin/ResetVec.ia32.raw |GCC

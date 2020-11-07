@@ -15,12 +15,12 @@ QEMU FSP SDK Build Steps
 
 .. code-block:: bash
 
-  git clone -b qemu_fsp_x64 --single-branch https://github.com/universalpayload/fspsdk.git
+  git clone https://github.com/joshloo/fspsdk.git
   cd fspsdk
   git submodule update --init
-  # Build 64 bit QEMU FSP
-  python buildFsp.py build -p qemu -a x64
   # Build 32 bit QEMU FSP
   python buildFsp.py build -p qemu -a ia32
+  
+  64 bit build is not supported yet.
 
 .. _EDK2: https://github.com/tianocore/edk2.git

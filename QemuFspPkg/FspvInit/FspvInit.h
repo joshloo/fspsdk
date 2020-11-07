@@ -18,6 +18,9 @@
 #include <Library/DebugLib.h>
 #include <Library/PciSegmentLib.h>
 #include <Library/PeiServicesLib.h>
+#include <Library/FspSwitchStackLib.h>
+#include <Library/FspCommonLib.h>
+#include <Library/FspPlatformLib.h>
 #include <Library/PcdLib.h>
 #include <FspvUpd.h>
 

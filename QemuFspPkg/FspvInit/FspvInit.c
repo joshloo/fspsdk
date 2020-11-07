@@ -57,9 +57,25 @@ FspvInitEntryPoint (
   IN    CONST EFI_PEI_SERVICES    **PeiServices
   )
 {
-  EFI_STATUS        Status;
+  EFI_STATUS                  Status;
+  FSPV_UPD                    *FspvUpd;
+  FSP_INFO_HEADER             *FspInfoHeader;
 
-  DEBUG ((DEBUG_INFO, "FspvInitPoint() - Begin\n"));
+  Status = EFI_SUCCESS;
+  FspvUpd = NULL;
+
+  DEBUG ((DEBUG_INFO, "FspvInitEntryPoint() - Begin\n"));
+  FspInfoHeader = GetFspInfoHeaderFromApiContext ();
+  SetFspInfoHeader (FspInfoHeader);
+  
+  FspvUpd = (FSPV_UPD *)GetFspApiParameter();
+  if (FspvUpd == NULL) {
+    //
+    // Use the UpdRegion as default
+    //
+    FspvUpd = (FSPV_UPD *)(UINTN)(FspInfoHeader->ImageBase + FspInfoHeader->CfgRegionOffset);
+  }
+  SetFspValidationInitUpdDataPointer (FspvUpd);
 
   //
   // Install FW Validation FV into Displatch list
@@ -68,7 +84,8 @@ FspvInitEntryPoint (
   PeiServicesInstallFvInfoPpi (
     NULL,
     //(VOID *)0x10000,
-    (VOID *) PcdGet32 (PcdFlashFwValBase),
+    PcdGet32 (PcdFlashFwValBase),
+    // (VOID *) PcdGet32 (PcdFlashFwValBase),
     //0x1000,
     PcdGet32 (PcdFlashFwValSize),
     NULL,
@@ -79,7 +96,8 @@ FspvInitEntryPoint (
   // Install FW Validation PPI
   //
   Status = PeiServicesInstallPpi (mFwValPpiList);
+  ASSERT_EFI_ERROR (Status);
 
-  DEBUG ((DEBUG_INFO, "FspvInitPoint() - End\n"));
+  DEBUG ((DEBUG_INFO, "FspvInitEntryPoint() - End\n"));
   return Status;
 }

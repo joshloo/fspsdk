@@ -51,6 +51,7 @@ typedef struct  {
    VOID               *UpdDataPtr;
    VOID               *TempRamInitUpdPtr;
    VOID               *MemoryInitUpdPtr;
+   VOID               *ValidationInitUpdPtr;
    VOID               *SiliconInitUpdPtr;
    UINT8              ApiIdx;
    ///
