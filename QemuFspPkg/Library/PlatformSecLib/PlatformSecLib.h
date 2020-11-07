@@ -26,6 +26,7 @@
 #include <Library/FspCommonLib.h>
 #include <FspmUpd.h>
 #include <FspsUpd.h>
+#include <FspvUpd.h>
 
 #define Flat32Start                  _ModuleEntryPoint
 extern UINT32                        *TopOfCar;

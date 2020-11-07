@@ -64,6 +64,7 @@
   IntelFsp2Pkg/Library/SecFspSecPlatformLibNull/SecFspSecPlatformLibNull.inf
 
   IntelFsp2Pkg/FspSecCore/FspSecCoreT.inf
+  IntelFsp2Pkg/FspSecCore/FspSecCoreV.inf
   IntelFsp2Pkg/FspSecCore/FspSecCoreM.inf
   IntelFsp2Pkg/FspSecCore/FspSecCoreS.inf
   IntelFsp2Pkg/FspSecCore/Fsp22SecCoreS.inf

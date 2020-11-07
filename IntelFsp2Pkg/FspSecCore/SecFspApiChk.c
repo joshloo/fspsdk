@@ -59,6 +59,19 @@ FspApiCallingCheck (
         Status = EFI_UNSUPPORTED;
       }
     }
+  } else if (ApiIdx == FspValInitApiIndex) {
+    //
+    // FspValInitApi check
+    //
+    if ((FspData == NULL) || ((UINT32)(UINTN)FspData == 0xFFFFFFFF)) {
+      Status = EFI_UNSUPPORTED;
+    } else {
+      if (FspData->Signature != FSP_GLOBAL_DATA_SIGNATURE) {
+        Status = EFI_UNSUPPORTED;
+      } else if (EFI_ERROR (FspUpdSignatureCheck (FspValInitApiIndex, ApiParam))) {
+        Status = EFI_INVALID_PARAMETER;
+      }
+    }
   } else if ((ApiIdx == FspSiliconInitApiIndex) || (ApiIdx == FspMultiPhaseSiInitApiIndex)) {
     //
     // FspSiliconInit check

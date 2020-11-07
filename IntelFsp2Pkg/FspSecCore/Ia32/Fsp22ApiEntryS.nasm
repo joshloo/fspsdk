@@ -26,6 +26,18 @@ ASM_PFX(NotifyPhaseApi):
   jmp    ASM_PFX(FspApiCommon)
 
 ;----------------------------------------------------------------------------
+; FspValInit API
+;
+; This FSP API initializes the validation parameters to capture test related
+; data of silicon initialization.
+;
+;----------------------------------------------------------------------------
+global ASM_PFX(FspValInitApiIndex)
+ASM_PFX(FspValInitApi):
+  mov    eax,  7 ; FSP_API_INDEX.FspValInitApiIndex
+  jmp    ASM_PFX(FspApiCommon)
+
+;----------------------------------------------------------------------------
 ; FspSiliconInit API
 ;
 ; This FSP API initializes the CPU and the chipset including the IO

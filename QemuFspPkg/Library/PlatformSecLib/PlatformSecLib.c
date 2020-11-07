@@ -48,10 +48,12 @@ FspUpdSignatureCheck (
   EFI_STATUS    Status;
   FSPM_UPD      *FspmUpd;
   FSPS_UPD      *FspsUpd;
+  FSPV_UPD      *FspvUpd;
 
   Status = EFI_SUCCESS;
   FspmUpd = NULL;
   FspsUpd = NULL;
+  FspvUpd = NULL;
 
   if (ApiIdx == FspMemoryInitApiIndex) {
     //
@@ -62,6 +64,16 @@ FspUpdSignatureCheck (
       if ((FspmUpd->FspUpdHeader.Signature != FSPM_UPD_SIGNATURE)
         || ((UINTN)FspmUpd->FspmArchUpd.StackBase == 0 )
         || ((FspmUpd->FspmArchUpd.BootLoaderTolumSize % EFI_PAGE_SIZE) != 0)) {
+        Status = EFI_INVALID_PARAMETER;
+      }
+    }
+  } else if (ApiIdx == FspValInitApiIndex) {
+    //
+    // FspValInit check
+    //
+    FspvUpd = (FSPV_UPD *)ApiParam;
+    if (FspvUpd != NULL) {
+      if (FspvUpd->FspUpdHeader.Signature != FSPV_UPD_SIGNATURE) {
         Status = EFI_INVALID_PARAMETER;
       }
     }

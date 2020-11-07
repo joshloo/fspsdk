@@ -416,6 +416,11 @@
   }
 
 [Components.$(FSP_ARCH)]
+  IntelFsp2Pkg/FspSecCore/FspSecCoreV.inf {
+    <LibraryClasses>
+      FspSecPlatformLib|$(FSP_PACKAGE)/Library/PlatformSecLib/Vtf0PlatformSecVLib.inf
+  }
+
   IntelFsp2Pkg/FspSecCore/FspSecCoreM.inf {
     <LibraryClasses>
       FspSecPlatformLib|$(FSP_PACKAGE)/Library/PlatformSecLib/Vtf0PlatformSecMLib.inf

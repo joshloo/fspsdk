@@ -1,5 +1,5 @@
 ## @file
-#  QEMU instance of Platform Sec Lib for FSP-M.
+#  QEMU instance of Platform Sec Lib for FSP-S.
 #
 #  Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 #
@@ -19,7 +19,7 @@
 ################################################################################
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = PlatformSecLibV
+  BASE_NAME                      = PlatformSecLibM
   FILE_GUID                      = BA5CD127-1960-4fa0-B024-BA8EF79B5209
   MODULE_TYPE                    = SEC
   VERSION_STRING                 = 1.0
@@ -41,6 +41,8 @@
 [Sources]
   PlatformSecLib.c
   PlatformSecLib.h
+
+
 
 ################################################################################
 #
