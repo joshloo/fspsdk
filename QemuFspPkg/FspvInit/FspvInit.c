@@ -84,8 +84,8 @@ FspvInitEntryPoint (
   PeiServicesInstallFvInfoPpi (
     NULL,
     //(VOID *)0x10000,
-    PcdGet32 (PcdFlashFwValBase),
-    // (VOID *) PcdGet32 (PcdFlashFwValBase),
+    // PcdGet32 (PcdFlashFwValBase),
+    (VOID *) PcdGet32 (PcdFlashFwValBase),
     //0x1000,
     PcdGet32 (PcdFlashFwValSize),
     NULL,

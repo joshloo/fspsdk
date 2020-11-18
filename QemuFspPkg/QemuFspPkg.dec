@@ -42,7 +42,7 @@
   gQemuFspPkgTokenSpaceGuid.PcdFspImageRevision           | 0x00000000           | UINT32  | 0x00000012
   gQemuFspPkgTokenSpaceGuid.PcdFspImageIdString           | 0x245053464D455124   | UINT64  | 0x00000013 #$QEMFSP$
   gQemuFspPkgTokenSpaceGuid.PcdFspImageAttributes         | 0x0000               | UINT16  | 0x00000015 #BIT0 Graphics supported
-  gQemuFspPkgTokenSpaceGuid.PcdFspComponentAttributes     | 0x0000               | UINT16  | 0x00000016 #Bits[15:12] - 0001b: FSP-T, 0010b: FSP-M, 0011b: FSP-S
+  gQemuFspPkgTokenSpaceGuid.PcdFspComponentAttributes     | 0x0000               | UINT16  | 0x00000016 #Bits[15:12] - 0001b: FSP-T, 0010b: FSP-M, 0011b: FSP-V, 0100b: FSP-S
   gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvBase            | 0x00000000           | UINT32  | 0x00000017
   gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvSize            | 0x00000000           | UINT32  | 0x00000018
 

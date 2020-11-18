@@ -14,7 +14,7 @@
 ##
 
 [Defines]
-DEFINE FLASH_BASE           = 0xFFFC8000
+DEFINE FLASH_BASE           = 0xFFFC3000
 DEFINE FLASH_BLOCK_SIZE     = 0x00000100
 
 #
@@ -26,14 +26,15 @@ DEFINE FLASH_NUM_BLOCKS     = 0x3D0          #The number of blocks
 SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspsBase  = 0x00000000
 SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspsSize  = 0x00015000
 
-SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspmBase  = 0x00015000
+SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvBase  = 0x00015000
+SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvSize  = 0x00005000
+
+SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspmBase  = 0x0001A000
 SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspmSize  = 0x00022000
 
-SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFsptBase  = 0x00037000
+SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFsptBase  = 0x0003C000
 SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFsptSize  = 0x00001000
 
-SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvBase  = 0x00038000
-SET gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvSize  = 0x00005000
 ################################################################################
 #
 # FD Section
@@ -67,6 +68,10 @@ SET gIntelFsp2PkgTokenSpaceGuid.PcdFspBootFirmwareVolumeBase = $(FLASH_BASE) + (
 gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspsBase|gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspsSize
 FV = FSP-S
 
+#FSP-V
+gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvBase|gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvSize
+FV = FSP-V
+
 #FSP-M
 gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspmBase|gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspmSize
 FV = FSP-M
@@ -74,10 +79,6 @@ FV = FSP-M
 #FSP-T
 gQemuFspPkgTokenSpaceGuid.PcdFlashFvFsptBase|gQemuFspPkgTokenSpaceGuid.PcdFlashFvFsptSize
 FV = FSP-T
-
-#FSP-V
-gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvBase|gQemuFspPkgTokenSpaceGuid.PcdFlashFvFspvSize
-FV = FSP-V
 
 [FV.FSP-T]
 BlockSize          = $(FLASH_BLOCK_SIZE)

@@ -45,7 +45,7 @@ TABLES mTable =
     0x12345678,                                   // UINT32  ImageBase;
 
     FixedPcdGet16(PcdFspImageAttributes),         // UINT16  ImageAttribute;
-    FixedPcdGet16(PcdFspComponentAttributes),     // UINT16  ComponentAttribute; Bits[15:12] - 0001b: FSP-T, 0010b: FSP-M, 0011b: FSP-S
+    FixedPcdGet16(PcdFspComponentAttributes),     // UINT16  ComponentAttribute; #Bits[15:12] - 0001b: FSP-T, 0010b: FSP-M, 0011b: FSP-V, 0100b: FSP-S
     0x12345678,                                   // UINT32  CfgRegionOffset;
     0x12345678,                                   // UINT32  CfgRegionSize;
     0x00000000,                                   // UINT32  Reserved2;
