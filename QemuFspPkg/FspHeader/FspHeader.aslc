@@ -56,6 +56,8 @@ TABLES mTable =
     0x00000000,                                   // UINT32  FspMemoryInitEntry;
     0x00000000,                                   // UINT32  TempRamExitEntry;
     0x00000000,                                   // UINT32  FspSiliconInitEntry;
+    0x00000000,                                   // UINT32  FspMultiPhaseSiInitEntry;
+    0x00000000,                                   // UINT32  FspValidationInitEntry;
   },
   {
     FSP_INFO_EXTENDED_HEADER_SIGNATURE,           // UINT32  Signature  (FSPE)

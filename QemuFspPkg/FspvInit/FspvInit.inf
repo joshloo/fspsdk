@@ -35,8 +35,6 @@
   gFspvFwValPpiGuid        ## PRODUCES
 
 [Pcd]
-  gIntelFsp2PkgTokenSpaceGuid.PcdFlashFwValBase      ###CONSUMES
-  gIntelFsp2PkgTokenSpaceGuid.PcdFlashFwValSize      ###CONSUMES
 
 [Guids]
 

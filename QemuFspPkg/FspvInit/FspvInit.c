@@ -77,21 +77,7 @@ FspvInitEntryPoint (
   }
   SetFspValidationInitUpdDataPointer (FspvUpd);
 
-  //
-  // Install FW Validation FV into Displatch list
-  //
-  DEBUG ((DEBUG_INFO, "Adding Validation FW Val FV to dispatch list\n"));
-  PeiServicesInstallFvInfoPpi (
-    NULL,
-    //(VOID *)0x10000,
-    // PcdGet32 (PcdFlashFwValBase),
-    (VOID *) PcdGet32 (PcdFlashFwValBase),
-    //0x1000,
-    PcdGet32 (PcdFlashFwValSize),
-    NULL,
-    NULL
-    );
-
+  DEBUG ((DEBUG_INFO, "Done adding, installing PPI\n"));
   //
   // Install FW Validation PPI
   //
@@ -99,5 +85,5 @@ FspvInitEntryPoint (
   ASSERT_EFI_ERROR (Status);
 
   DEBUG ((DEBUG_INFO, "FspvInitEntryPoint() - End\n"));
-  return Status;
+  return EFI_SUCCESS;
 }
