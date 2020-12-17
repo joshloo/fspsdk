@@ -23,6 +23,7 @@
 #include <Library/FspPlatformLib.h>
 #include <Library/PcdLib.h>
 #include <FspvUpd.h>
+#include <Library/FspSwitchStackLib.h>
 
 ///
 /// Global ID for FW_VAL_PPI_GUID.

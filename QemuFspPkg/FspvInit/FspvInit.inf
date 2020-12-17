@@ -48,6 +48,7 @@
   FspCommonLib
   DebugLib
   PcdLib
+  FspSwitchStackLib
 
 [Depex]
 TRUE
