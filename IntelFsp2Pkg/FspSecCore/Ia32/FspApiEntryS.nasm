@@ -33,7 +33,7 @@ ASM_PFX(NotifyPhaseApi):
 ;----------------------------------------------------------------------------
 global ASM_PFX(FspSiliconInitApi)
 ASM_PFX(FspSiliconInitApi):
-  mov    eax,  5 ; FSP_API_INDEX.FspSiliconInitApiIndex
+  mov    eax,  6 ; FSP_API_INDEX.FspSiliconInitApiIndex
   jmp    ASM_PFX(FspApiCommon)
 
 ;----------------------------------------------------------------------------

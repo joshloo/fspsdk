@@ -46,6 +46,49 @@ static EFI_PEI_PPI_DESCRIPTOR  mFwValPpiList[] = {
 };
 
 /**
+  This function reports and installs new FV
+
+  @retval     EFI_SUCCESS          The function completes successfully
+**/
+EFI_STATUS
+ReportAndInstallNewFv (
+  VOID
+  )
+{
+  FSP_INFO_HEADER                *FspInfoHeader;
+  EFI_FIRMWARE_VOLUME_HEADER     *FvHeader;
+  UINT8                          *CurPtr;
+  UINT8                          *EndPtr;
+
+  FspInfoHeader = GetFspInfoHeaderFromApiContext();
+  if (FspInfoHeader->Signature != FSP_INFO_HEADER_SIGNATURE) {
+    DEBUG ((DEBUG_ERROR, "The signature of FspInfoHeader getting from API context is invalid at %p.\n", FspInfoHeader));
+    FspInfoHeader = GetFspInfoHeader();
+  }
+
+  CurPtr = (UINT8 *)(UINTN)FspInfoHeader->ImageBase;
+  EndPtr = CurPtr + FspInfoHeader->ImageSize - 1;
+
+  while (CurPtr < EndPtr) {
+    FvHeader = (EFI_FIRMWARE_VOLUME_HEADER *)CurPtr;
+    if (FvHeader->Signature != EFI_FVH_SIGNATURE) {
+      break;
+    }
+    PeiServicesInstallFvInfoPpi (
+      NULL,
+      (VOID *)FvHeader,
+      (UINT32)FvHeader->FvLength,
+      NULL,
+      NULL
+      );
+    CurPtr += FvHeader->FvLength;
+  }
+
+  return EFI_SUCCESS;
+}
+
+
+/**
   FSP-V FW Validation Init Code
 
   @param[in] FileHandle           The file handle of the file, Not used.
@@ -63,16 +106,11 @@ FspvInitEntryPoint (
 
   EFI_STATUS                  Status = EFI_SUCCESS;
 
-  SetPhaseStatusCode (FSP_STATUS_CODE_VALIDATION_INIT);
-  SetFspMeasurePoint (FSP_PERF_ID_API_FSP_VALIDATION_INIT_ENTRY);
-  PERF_START_EX(&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
-  REPORT_STATUS_CODE (EFI_PROGRESS_CODE, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
-  DEBUG ((DEBUG_INFO | DEBUG_INIT, "FspValidationInitApi() - Begin\n"));
-/*
 
   FSPV_UPD                    *FspvUpd;
   FSP_INFO_HEADER             *FspInfoHeader;
 
+  DEBUG ((DEBUG_INFO, "This is the only test string in FSPV for now.\n"));
   Status = EFI_SUCCESS;
   FspvUpd = NULL;
   FspInfoHeader = GetFspInfoHeaderFromApiContext ();
@@ -87,27 +125,20 @@ FspvInitEntryPoint (
   }
   SetFspValidationInitUpdDataPointer (FspvUpd);
 
-  DEBUG ((DEBUG_INFO, "Done adding, installing PPI\n"));
   //
   // Install FW Validation PPI
   //
   Status = PeiServicesInstallPpi (mFwValPpiList);
   ASSERT_EFI_ERROR (Status);
 
-
-*/
-
   // This is the end of the FspValidationInit API
   // Give control back to the boot loader
   //
-  SetFspMeasurePoint (FSP_PERF_ID_API_FSP_VALIDATION_INIT_EXIT);
-  DEBUG ((DEBUG_INFO, "a\n"));
-  DEBUG ((DEBUG_INFO | DEBUG_INIT, "FspValidationInit() - [Status: 0x%08X] - End\n", Status));
-  PERF_END_EX (&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_EXIT);
-  REPORT_STATUS_CODE (EFI_PROGRESS_CODE, FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_EXIT);
-  DEBUG ((DEBUG_INFO, "e\n"));
+  FspValidationInitDone ();
 
-  Pei2LoaderSwitchStack();
-  DEBUG ((DEBUG_INFO, "Supposedly switch stack already.. should not come here\n"));
+  //
+  // Give control back after ValidationApi
+  //
+  ReportAndInstallNewFv ();
   return EFI_SUCCESS;
 }

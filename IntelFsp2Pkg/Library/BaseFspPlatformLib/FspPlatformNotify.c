@@ -215,12 +215,14 @@ FspMemoryInitDone2 (
   // The TempRamExitApi is called
   //
   if (GetFspApiCallingIndex () == TempRamExitApiIndex) {
+  DEBUG ((DEBUG_INFO | DEBUG_INIT, "TL is here ------------------------------------------- tempramexit1\n", Status));
     SetPhaseStatusCode (FSP_STATUS_CODE_TEMP_RAM_EXIT);
     SetFspMeasurePoint (FSP_PERF_ID_API_TEMP_RAM_EXIT_ENTRY);
     PERF_START_EX(&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_TEMP_RAM_EXIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
     REPORT_STATUS_CODE (EFI_PROGRESS_CODE, FSP_STATUS_CODE_TEMP_RAM_EXIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
     DEBUG ((DEBUG_INFO | DEBUG_INIT, "TempRamExitApi() - Begin\n"));
   } else {
+  DEBUG ((DEBUG_INFO | DEBUG_INIT, "TL is here ------------------------------------------- siliconinit... phase here??\n", Status));
     SetPhaseStatusCode (FSP_STATUS_CODE_SILICON_INIT);
     SetFspMeasurePoint (FSP_PERF_ID_API_FSP_SILICON_INIT_ENTRY);
     PERF_START_EX(&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_SILICON_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
@@ -275,11 +277,64 @@ FspTempRamExitDone2 (
       }
     } while (FspStatus != EFI_SUCCESS);
   }
+  SetPhaseStatusCode (FSP_STATUS_CODE_VALIDATION_INIT);
+  SetFspMeasurePoint (FSP_PERF_ID_API_FSP_VALIDATION_INIT_ENTRY);
+  PERF_START_EX(&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
+  REPORT_STATUS_CODE (EFI_PROGRESS_CODE, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
+  DEBUG ((DEBUG_INFO | DEBUG_INIT, "FspValidationInitApi() - Begin\n"));
+}
+
+/**
+  This function returns control to BootLoader after TempRamExitApi.
+
+  @param[in] Status return status for the TempRamExitApi.
+
+**/
+VOID
+EFIAPI
+FspValidationInitDone2 (
+  IN EFI_STATUS Status
+  )
+{
+  //
+  volatile EFI_STATUS FspStatus;
+
+  FspStatus = Status;
+  // Convert to FSP EAS defined API return codes
+  //
+  switch (Status) {
+    case EFI_SUCCESS:
+    case EFI_INVALID_PARAMETER:
+    case EFI_UNSUPPORTED:
+    case EFI_DEVICE_ERROR:
+      break;
+    default:
+      DEBUG ((DEBUG_INFO | DEBUG_INIT, "FspValidationInitApi() Invalid Error - [Status: 0x%08X]\n", Status));
+      Status = EFI_DEVICE_ERROR;  // Force to known error.
+      break;
+  }
+  //
+  // This is the end of the Validation Init API
+  // Give control back to the boot loader
+  //
+  DEBUG ((DEBUG_INFO | DEBUG_INIT, "FspValidationInitApi() - [Status: 0x%08X] - End\n", Status));
+  SetFspMeasurePoint (FSP_PERF_ID_API_TEMP_RAM_EXIT_EXIT);
+  PERF_END_EX(&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_EXIT);
+  REPORT_STATUS_CODE (EFI_PROGRESS_CODE, FSP_STATUS_CODE_VALIDATION_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_EXIT);
+  if (GetFspGlobalDataPointer ()->FspMode == FSP_IN_API_MODE) {
+    do {
+      SetFspApiReturnStatus (Status);
+      Pei2LoaderSwitchStack ();
+      if (Status != EFI_SUCCESS) {
+        DEBUG ((DEBUG_ERROR, "!!!ERROR: FspValidationInitApi() - [Status: 0x%08X] - Error encountered during previous API and cannot proceed further\n", Status));
+      }
+    } while (FspStatus != EFI_SUCCESS);
+  }
   SetPhaseStatusCode (FSP_STATUS_CODE_SILICON_INIT);
   SetFspMeasurePoint (FSP_PERF_ID_API_FSP_SILICON_INIT_ENTRY);
   PERF_START_EX(&gFspPerformanceDataGuid, "EventRec", NULL, 0, FSP_STATUS_CODE_SILICON_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
   REPORT_STATUS_CODE (EFI_PROGRESS_CODE, FSP_STATUS_CODE_SILICON_INIT | FSP_STATUS_CODE_COMMON_CODE | FSP_STATUS_CODE_API_ENTRY);
-  DEBUG ((DEBUG_INFO | DEBUG_INIT, "SiliconInitApi() - Begin\n"));
+  DEBUG ((DEBUG_INFO | DEBUG_INIT, "FspSiliconInitApi() - Begin\n"));
 }
 
 /**
@@ -406,4 +461,17 @@ FspTempRamExitDone (
   )
 {
   FspTempRamExitDone2 (EFI_SUCCESS);
+}
+
+/**
+  This function returns control to BootLoader after Validation Init.
+
+**/
+VOID
+EFIAPI
+FspValidationInitDone (
+  VOID
+  )
+{
+  FspValidationInitDone2 (EFI_SUCCESS);
 }

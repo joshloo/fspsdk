@@ -75,6 +75,16 @@ FspTempRamExitDone (
   );
 
 /**
+  This function returns control to BootLoader after ValidationInitApi.
+
+**/
+VOID
+EFIAPI
+FspValidationInitDone (
+  VOID
+  );
+
+/**
   This function handle NotifyPhase API call from the BootLoader.
   It gives control back to the BootLoader after it is handled. If the
   Notification code is a ReadyToBoot event, this function will return

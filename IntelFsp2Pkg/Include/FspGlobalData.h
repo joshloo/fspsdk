@@ -21,9 +21,9 @@ typedef enum {
   NotifyPhaseApiIndex,
   FspMemoryInitApiIndex,
   TempRamExitApiIndex,
+  FspValInitApiIndex,
   FspSiliconInitApiIndex,
   FspMultiPhaseSiInitApiIndex,
-  FspValInitApiIndex,
   FspApiIndexMax
 } FSP_API_INDEX;
 

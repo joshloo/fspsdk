@@ -25,6 +25,7 @@ FspApiCallingCheck (
   EFI_STATUS                Status;
   FSP_GLOBAL_DATA           *FspData;
 
+    DEBUG ((DEBUG_INFO | DEBUG_INIT, "TL is here ------------------------------------------- FSP API CALLING CHECK\n"));
   Status = EFI_SUCCESS;
   FspData = GetFspGlobalDataPointer ();
 

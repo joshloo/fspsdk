@@ -62,7 +62,7 @@ FspApiCommon2:
   cmp    eax, 3   ; FspMemoryInit API
   jz     FspApiCommon3
 
-  cmp    eax, 6   ; FspMultiPhaseSiInitApiIndex API
+  cmp    eax, 7   ; FspMultiPhaseSiInitApiIndex API
   jz     FspApiCommon3
 
   call   ASM_PFX(AsmGetFspInfoHeader)

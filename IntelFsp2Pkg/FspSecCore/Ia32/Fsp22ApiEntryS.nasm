@@ -34,7 +34,7 @@ ASM_PFX(NotifyPhaseApi):
 ;----------------------------------------------------------------------------
 global ASM_PFX(FspValInitApiIndex)
 ASM_PFX(FspValInitApi):
-  mov    eax,  7 ; FSP_API_INDEX.FspValInitApiIndex
+  mov    eax,  5 ; FSP_API_INDEX.FspValInitApiIndex
   jmp    ASM_PFX(FspApiCommon)
 
 ;----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ ASM_PFX(FspValInitApi):
 ;----------------------------------------------------------------------------
 global ASM_PFX(FspSiliconInitApi)
 ASM_PFX(FspSiliconInitApi):
-  mov    eax,  5 ; FSP_API_INDEX.FspSiliconInitApiIndex
+  mov    eax,  6 ; FSP_API_INDEX.FspSiliconInitApiIndex
   jmp    ASM_PFX(FspApiCommon)
 
 ;----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ ASM_PFX(FspSiliconInitApi):
 ;----------------------------------------------------------------------------
 global ASM_PFX(FspMultiPhaseSiInitApi)
 ASM_PFX(FspMultiPhaseSiInitApi):
-  mov    eax,  6 ; FSP_API_INDEX.FspMultiPhaseSiInitApiIndex
+  mov    eax,  7 ; FSP_API_INDEX.FspMultiPhaseSiInitApiIndex
   jmp    ASM_PFX(FspApiCommon)
 
 ;----------------------------------------------------------------------------

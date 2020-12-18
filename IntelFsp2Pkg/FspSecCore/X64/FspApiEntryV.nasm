@@ -43,7 +43,7 @@ ASM_PFX(NotifyPhaseApi):
 ;----------------------------------------------------------------------------
 global ASM_PFX(FspValInitApi)
 ASM_PFX(FspValInitApi):
-  mov    eax,  7 ; FSP_API_INDEX.FspValInitApiIndex
+  mov    eax,  5 ; FSP_API_INDEX.FspValInitApiIndex
   jmp    ASM_PFX(FspApiCommon)
 
 
